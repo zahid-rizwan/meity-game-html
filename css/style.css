@@ -1,0 +1,25 @@
+body{
+    background-color: rgb(194, 194, 223);
+}
+.main-page{
+  height: 100vh;
+}
+.custom-gif{
+    z-index: 1;
+    align-items: center;
+    width: 150px;
+}
+.card {
+    background-color: rgb(48, 48, 75);
+  }
+  
+  .card img {
+    width: 100%; /* Ensure the image fills the card */
+    height: 100%; /* Ensure the image fills the height of the card */
+    object-fit: contain; /* Ensure the entire image is visible within the card */
+  }
+  img{
+    cursor: pointer;
+  }
+
+ 
