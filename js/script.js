@@ -102,19 +102,22 @@ function checkAnswer(isCorrect) {
     const correctCount = parseInt(correctCountElement.textContent);
     correctCountElement.textContent = correctCount + 1;
   } else {
-    document.getElementById("incorrect-gif").style.display = "block";
-    document.getElementById("incorrect-sound").play();
-
-    // Hide one heart if there are remaining hearts
     if (remainingHearts > 0) {
       const hearts = document.getElementById("hearts");
       const heartIcons = hearts.querySelectorAll(".bi-heart-fill");
       heartIcons[remainingHearts - 1].style.display = "none";
       remainingHearts--;
     }
+    if (remainingHearts != 0) {
+      document.getElementById("incorrect-gif").style.display = "block";
+      document.getElementById("incorrect-sound").play();
+    }
+
+    // Hide one heart if there are remaining hearts
 
     // If no hearts are left, show "Game Over" message
-    if (remainingHearts === 0) {
+    else {
+      document.getElementById("game-over").play();
       document.getElementById("game-over-message").style.display = "block";
       document.getElementById("incorrect-gif").style.display = "none";
       clickable = false;
@@ -150,7 +153,7 @@ function restartGame() {
   document.getElementById("game-over-message").style.display = "none";
   const heartIcons = document.querySelectorAll("#hearts .bi-heart-fill");
   heartIcons.forEach((icon) => (icon.style.display = "inline"));
-  
+
   clickable = true;
   displayImages();
 }
