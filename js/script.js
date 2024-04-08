@@ -1,4 +1,3 @@
-// Define arrays for edible and non-edible image URLs
 const edibleImageUrls = [
   "./edible/apple.svg",
   "./edible/grapes.svg",
@@ -16,15 +15,15 @@ const nonEdibleImageUrls = [
   "./notEdible/Bus.svg",
   "./notEdible/Truck.svg",
 ];
+let count = 0;
 let currentEdibleIndex = 0;
 let remainingHearts = 3;
 let currentNonEdibleIndex = 0;
-let clickable = true; // Flag to track if cards are clickable
+let clickable = true;
 function pauseClicked() {
   var button = document.querySelector(".pause_button");
   var icon = button.querySelector("i");
 
-  // Toggle between pause and play icon
   if (icon.classList.contains("bi-pause-fill")) {
     icon.classList.remove("bi-pause-fill");
     icon.classList.add("bi-caret-right-fill");
@@ -33,10 +32,8 @@ function pauseClicked() {
     icon.classList.add("bi-pause-fill");
   }
 }
-// Function to display the next set of images
 function displayImages() {
-  // Randomly decide which card should display the edible image
-  const isEdibleFirst = Math.random() < 0.5; // Randomly choose between true (first card) or false (second card)
+  const isEdibleFirst = Math.random() < 0.5;
 
   // Get the index for selecting images
   const edibleIndex = currentEdibleIndex % edibleImageUrls.length;
@@ -70,76 +67,64 @@ function displayImages() {
       </div>
     </div>
   `;
-
-  // Replace the content of the image row with the new cards
   imageRow.innerHTML = cardHtml;
 
-  // Increment the index for the next time
   currentEdibleIndex++;
   currentNonEdibleIndex++;
 }
 
-// Function to check the correctness of the player's answer
-// Initialize with the total number of hearts
-
-// Function to check the correctness of the player's answer
 function checkAnswer(isCorrect) {
-  // If cards are not clickable, return without doing anything
   if (!clickable) {
     return;
   }
 
-  // Disable clicking on cards
+  count++;
   clickable = false;
-
-  // If correct, show the GIF and play the success sound
+  console.log(count);
   if (isCorrect) {
     document.getElementById("correct-gif").style.display = "block";
     document.getElementById("success-sound").play();
-
-    // Increase the correct count and display it
     const correctCountElement = document.getElementById("correctCount");
     const correctCount = parseInt(correctCountElement.textContent);
     correctCountElement.textContent = correctCount + 1;
   } else {
+    const inCorrectCountElement = document.getElementById("inCorrectCount");
+    inCorrectCountElement.textContent =
+      parseInt(inCorrectCountElement.textContent) + 1;
+
     if (remainingHearts > 0) {
       const hearts = document.getElementById("hearts");
       const heartIcons = hearts.querySelectorAll(".bi-heart-fill");
       heartIcons[remainingHearts - 1].style.display = "none";
       remainingHearts--;
     }
+
     if (remainingHearts != 0) {
       document.getElementById("incorrect-gif").style.display = "block";
       document.getElementById("incorrect-sound").play();
-    }
-
-    // Hide one heart if there are remaining hearts
-
-    // If no hearts are left, show "Game Over" message
-    else {
+    } else {
       document.getElementById("game-over").play();
-      document.getElementById("game-over-message").style.display = "block";
-      document.getElementById("incorrect-gif").style.display = "none";
+      const modal = document.getElementById("game-over-modal");
+      modal.classList.add("show");
+      modal.style.display = "block";
       clickable = false;
       return;
     }
   }
 
-  // Show the "Next" button
+  if (count == 10) {
+    document.getElementById("game-over").play();
+    const modal = document.getElementById("game-over-modal");
+    modal.classList.add("show");
+    modal.style.display = "block";
+  }
   document.getElementById("next-button").style.display = "block";
 }
-
-// Function to proceed to the next set of images
 function nextImages() {
-  // Hide the "Next" button and GIFs
   document.getElementById("correct-gif").style.display = "none";
   document.getElementById("incorrect-gif").style.display = "none";
   document.getElementById("next-button").style.display = "none";
-
-  // Enable clicking on cards
   clickable = true;
-
-  // Display the next set of images
   displayImages();
 }
 // Function to restart the game
@@ -148,9 +133,12 @@ function restartGame() {
   remainingHearts = 3;
   currentEdibleIndex = 0;
   currentNonEdibleIndex = 0;
+  const modal = document.getElementById("game-over-modal");
+  modal.classList.add("show");
+  modal.style.display = "none";
   document.getElementById("correctCount").textContent = "0";
-  document.getElementById("wrongCount").textContent = "0";
-  document.getElementById("game-over-message").style.display = "none";
+  document.getElementById("inCorrectCount").textContent = "0";
+  // document.getElementById("game-over-message").style.display = "none";
   const heartIcons = document.querySelectorAll("#hearts .bi-heart-fill");
   heartIcons.forEach((icon) => (icon.style.display = "inline"));
 
